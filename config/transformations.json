@@ -1,0 +1,45 @@
+{
+    "transformations": [
+        {
+            "action": "rename_column",
+            "source_column": "Order Number",
+            "target_column": "OrderID",
+            "type": "Integer"
+        },
+        {
+            "action": "concatenate_date",
+            "source_columns": ["Year", "Month", "Day"],
+            "target_column": "OrderDate",
+            "format": "%Y-%m-%d"
+        },
+        {
+            "action": "rename_column",
+            "source_column": "Product Number",
+            "target_column": "ProductId",
+            "type": "String"
+        },
+        {
+            "action": "rename_column",
+            "source_column": "Product Name",
+            "target_column": "ProductName",
+            "type": "String",
+            "proper_case": true
+        },
+        {
+            "action": "rename_column",
+            "source_column": "Count",
+            "target_column": "Quantity",
+            "type": "BigDecimal"
+        },
+        {
+            "action": "add_column_constant",
+            "target_column": "Unit",
+            "value": "kg",
+            "type": "String"
+        },
+        {
+            "action": "select_output_columns",
+            "columns": ["OrderID", "OrderDate", "ProductId", "ProductName", "Quantity", "Unit"]
+        }
+    ]
+}
