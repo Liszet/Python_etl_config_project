@@ -5,18 +5,39 @@ class Transformer:
     def __init__(self, transformations):
         self.transformations = transformations
 
-    def transform(self, row):
+    def transform(self, rows):
+        single_row = False
+        # Check if rows is a single dictionary and convert to list
+        if isinstance(rows, dict):
+            rows = [rows]
+            single_row = True
+
+        transformed_rows = []
+        for row in rows:
+            transformed_row = row.copy()
+            for transformation in self.transformations:
+                action = transformation['action']
+                if action == 'rename_column':
+                    self.rename_column(transformed_row, transformation)
+                elif action == 'concatenate_date':
+                    self.concatenate_date_columns(transformed_row, transformation)
+                elif action == 'add_column_constant':
+                    self.add_column_constant(transformed_row, transformation)
+            transformed_rows.append(transformed_row)
+        
+        # Apply sorting if defined in the transformations
         for transformation in self.transformations:
-            action = transformation['action']
-            if action == 'rename_column':
-                self.rename_column(row, transformation)
-            elif action == 'concatenate_date':
-                self.concatenate_date_columns(row, transformation)
-            elif action == 'add_column_constant':
-                self.add_column_constant(row, transformation)
-            elif action == 'select_output_columns':
-                row = self.select_output_columns(row, transformation)
-        return row
+            if transformation['action'] == 'sort_data':
+                transformed_rows = self.sort_data(transformed_rows, transformation)
+                break
+
+        # Apply selecting output columns if defined in the transformations
+        for transformation in self.transformations:
+            if transformation['action'] == 'select_output_columns':
+                transformed_rows = [self.select_output_columns(row, transformation) for row in transformed_rows]
+                break
+
+        return transformed_rows[0] if single_row else transformed_rows # Return a single dictionary if only one row is passed
     
     # Rename a column based on config file
     def rename_column(self, row, transformation):
@@ -36,6 +57,14 @@ class Transformer:
     # Add a constant value to a new column
     def add_column_constant(self, row, transformation):
         row[transformation['target_column']] = self.cast_type(transformation['value'], transformation['type'])
+
+    # Sort the data based on config file
+    def sort_data(self, rows, transformation):
+        sort_column = transformation['sort_column']
+        sort_order = transformation.get('sort_order', 'asc').lower()
+        if sort_order not in ['asc', 'desc']:
+            sort_order = 'asc'
+        return sorted(rows, key=lambda x: x[sort_column], reverse=(sort_order == 'desc'))
 
     # Select output columns based on config file
     def select_output_columns(self, row, transformation):

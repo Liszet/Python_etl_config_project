@@ -137,6 +137,65 @@ class TestTransformer(unittest.TestCase):
         expected = {'ConstantColumn': decimal.Decimal('10.55')}
         self.assertEqual(row, expected)
 
+    # Test sorting data in ascending order
+    def test_sort_data_ascending(self):
+        rows = [
+            {'OrderID': '3', 'ProductName': 'Banana'},
+            {'OrderID': '1', 'ProductName': 'Apple'},
+            {'OrderID': '2', 'ProductName': 'Cherry'}
+        ]
+        transformation = {
+            'action': 'sort_data',
+            'sort_column': 'OrderID',
+            'sort_order': 'asc'
+        }
+        sorted_rows = self.transformer.sort_data(rows, transformation)
+        self.assertEqual([row['OrderID'] for row in sorted_rows], ['1', '2', '3'])
+
+    # Test sorting data in descending order
+    def test_sort_data_descending(self):
+        rows = [
+            {'OrderID': '3', 'ProductName': 'Banana'},
+            {'OrderID': '1', 'ProductName': 'Apple'},
+            {'OrderID': '2', 'ProductName': 'Cherry'}
+        ]
+        transformation = {
+            'action': 'sort_data',
+            'sort_column': 'OrderID',
+            'sort_order': 'desc'
+        }
+        sorted_rows = self.transformer.sort_data(rows, transformation)
+        self.assertEqual([row['OrderID'] for row in sorted_rows], ['3', '2', '1'])
+    
+    # Test sorting data with invalid order
+    def test_sort_data_invalid_order(self):
+        rows = [
+            {'OrderID': '3', 'ProductName': 'Banana'},
+            {'OrderID': '1', 'ProductName': 'Apple'},
+            {'OrderID': '2', 'ProductName': 'Cherry'}
+        ]
+        transformation = {
+            'action': 'sort_data',
+            'sort_column': 'OrderID',
+            'sort_order': 'invalid'
+        }
+        sorted_rows = self.transformer.sort_data(rows, transformation)
+        self.assertEqual([row['OrderID'] for row in sorted_rows], ['1', '2', '3'])
+
+    # Test sorting data with missing sort_order
+    def test_sort_data_missing_sort_order(self):
+        rows = [
+            {'OrderID': '3', 'ProductName': 'Banana'},
+            {'OrderID': '1', 'ProductName': 'Apple'},
+            {'OrderID': '2', 'ProductName': 'Cherry'}
+        ]
+        transformation = {
+            'action': 'sort_data',
+            'sort_column': 'OrderID'
+        }
+        sorted_rows = self.transformer.sort_data(rows, transformation)
+        self.assertEqual([row['OrderID'] for row in sorted_rows], ['1', '2', '3'])
+
     # Test selecting output columns when all columns are present
     def test_select_output_columns(self):
         row = {

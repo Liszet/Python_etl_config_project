@@ -10,6 +10,7 @@ This project implements a configurable ETL (Extract, Transform, Load) system for
 - Concatenate columns to form dates
 - Apply proper case to text fields
 - Add constant values to columns
+- Order the data based on a specific column
 - Select specific columns for the output
 
 ## Installation
@@ -82,6 +83,19 @@ Adds a new column with a constant value
 - **target_column**: The new column name.
 - **value**: The constant value to add
 - **type** (Optional): The data type of the constant value. If ommited then it defaults to `String` .
+
+### Sort Data
+Sorts the data based on a column. Default is ascending, unless otherwise specified.
+
+```json
+{
+    "action": "sort_data",
+    "sort_column": "OrderDate",
+    "sort_order": "desc"
+}
+```
+- **sort_column**: the column used for sorting
+- **sort_order** (Optional): Default is ascending. Valid values `asc` (ascending) and `desc` (descending)
 
 ### Select Output Columns
 Selects specific columns for the final output

@@ -38,6 +38,11 @@
             "type": "String"
         },
         {
+            "action": "sort_data",
+            "sort_column": "OrderDate",
+            "sort_order": "desc"
+        },
+        {
             "action": "select_output_columns",
             "columns": ["OrderID", "OrderDate", "ProductId", "ProductName", "Quantity", "Unit"]
         }
