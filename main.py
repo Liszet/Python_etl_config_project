@@ -1,4 +1,4 @@
-from etl.etl import ETL
+from etl.etl import ETL # modify this to use etl.etl_chunk to handle bigger csv files
 import time
 import os
 

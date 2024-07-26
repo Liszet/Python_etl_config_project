@@ -108,9 +108,35 @@ Selects specific columns for the final output
 - **columns**: List of columns to include in the final output
 
 
-## Unit tests
+## Unit Tests
 To run the tests, run the following line in the terminal. This runs all the unit tests found in the `tests` directory using the unittest Python built-in module.
 
 ```bash
 python -m unittest discover tests
 ```
+
+## Performance Tests
+
+To evaluate the performance of the ETL system, I conducted tests by varying the size of the sample.csv file. 
+
+Here is a summary of the performance test results:
+
+| Sample.csv Number of Rows | Execution Time (sec) |
+|---------------------------|---------------------|
+| 1,000                     | 0.3                 |
+| 100,000                   | 2                   |
+| 1,000,000                 | 20                  |
+| 10,000,000                | 300                 |
+| 10,000,000                | 250  (etl_chunk)    |
+
+And here are the specs of the computer running the tests:
+
+- Processor: 11th Gen Intel(R) Core(TM) i7-11850H @ 2.50GHz
+- RAM: 32 GB
+- Storage: 474 GB SSD
+- Operating System: Windows 11 23H2
+- Python Version: 3.12.4
+
+The last test is run by modifying the main.py to use etl_chunk.py file instead. There are some performance improvements, but the handling of the column transformations do mean that all data needs to be loaded into memory for part of the transformation. 
+
+Further tests would need to be conducted. 
